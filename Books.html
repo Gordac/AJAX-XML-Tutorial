@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<title>BOOKS</title>
+<meta charset="utf-8">
+<script>
+function loadXML(){
+	var xHttp = new XMLHttpRequest();
+	xHttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.state == 200){
+			createView(this);
+		}
+	};
+	xHttp.open("GET", "book_collection.xml", true);
+	xHttp.send();
+}
+
+function createView(xml){
+	var xmlDoc = xml.responseXML;
+	
+	var table="<tr><th>Book</th></tr>";
+	
+	var book = xmlDoc.getElementsByTagName("BOOK");
+	
+	for(var index = 0; book.length; index++){
+		table += "<tr><td>" + book.getElementsByTagName("AUTHOR")[0].childNodes[0].nodeValue +
+		"</td><td>" +
+		book.getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
+		"</td></tr>";
+	}
+	document.getElementById("bookView").innerHTML = table;
+}
+</script>
+<html>
+<body onload="loadXML()">
+
+
+<h2>Local LIbrary</h2>
+<table id="bookView"></table>
+</body>
