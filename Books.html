@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
+<link rel="shortcut icon" href="#">
 <title>BOOKS</title>
 <meta charset="utf-8">
 <script>
 function loadXML(){
 	var xHttp = new XMLHttpRequest();
+        xHttp.overrideMimeType("text/xml");
 	xHttp.onreadystatechange = function(){
-		if(this.readyState == 4 && this.state == 200){
-			createView(this);
+		if(this.readyState == 4 && this.status == 200){
+                    createView(this);    
 		}
 	};
 	xHttp.open("GET", "book_collection.xml", true);
@@ -21,20 +23,25 @@ function createView(xml){
 	var table="<tr><th>Book</th></tr>";
 	
 	var book = xmlDoc.getElementsByTagName("BOOK");
-	
-	for(var index = 0; book.length; index++){
-		table += "<tr><td>" + book.getElementsByTagName("AUTHOR")[0].childNodes[0].nodeValue +
+        
+        var index = 0;
+	for(index; index < book.length; index++){
+		table += "<tr><td>" + book[index].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
 		"</td><td>" +
-		book.getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
+		book[index].getElementsByTagName("AUTHOR")[0].childNodes[0].nodeValue +
 		"</td></tr>";
 	}
 	document.getElementById("bookView").innerHTML = table;
+        
 }
 </script>
-<html>
+</head>
 <body onload="loadXML()">
 
 
-<h2>Local LIbrary</h2>
+<h2>Local Library</h2>
+<div class="Main">
 <table id="bookView"></table>
+</div>
 </body>
+</html>
