@@ -2,6 +2,7 @@
 <html lang="sv">
 <head>
 <link rel="shortcut icon" href="#">
+<link rel="stylesheet" type="text/css" href="design.css">
 <title>BOOKS</title>
 <meta charset="utf-8">
 <script>
@@ -20,7 +21,7 @@ function loadXML(){
 function createView(xml){
 	var xmlDoc = xml.responseXML;
 	
-	var table="<tr><th>Book</th></tr>";
+	var table="<tr><th>Title</th><th>Author</th><th>Publisher</th><th>Price</th><th>Year</th></tr>";
 	
 	var book = xmlDoc.getElementsByTagName("BOOK");
         
@@ -29,6 +30,12 @@ function createView(xml){
 		table += "<tr><td>" + book[index].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
 		"</td><td>" +
 		book[index].getElementsByTagName("AUTHOR")[0].childNodes[0].nodeValue +
+		"</td><td>" +
+                book[index].getElementsByTagName("PUBLISHER")[0].childNodes[0].nodeValue +
+		"</td><td>" + 
+                book[index].getElementsByTagName("PRICE")[0].childNodes[0].nodeValue + " SEK" +
+		"</td><td>" +
+                book[index].getElementsByTagName("YEAR")[0].childNodes[0].nodeValue +
 		"</td></tr>";
 	}
 	document.getElementById("bookView").innerHTML = table;
@@ -38,10 +45,10 @@ function createView(xml){
 </head>
 <body onload="loadXML()">
 
-
-<h2>Local Library</h2>
-<div class="Main">
-<table id="bookView"></table>
+<div class="main">
+    <h2>Local Library</h2>
+    
+    <table id="bookView"></table>
 </div>
 </body>
 </html>
