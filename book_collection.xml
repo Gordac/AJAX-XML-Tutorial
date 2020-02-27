@@ -1,0 +1,23 @@
+<BOOKS>
+<BOOK>
+<TITLE>Game of Thrones</TITLE>
+<AUTHOR>George R.R. Martin</AUTHOR>
+<PUBLISHER>Someone</PUBLISHER>
+<PRICE>19.99</PRICE>
+<YEAR>1995</YEAR>
+</BOOK>
+<BOOK>
+<TITLE>Lies of Locke Lamora</TITLE>
+<AUTHOR>Scott Lynch</AUTHOR>
+<PUBLISHER>Someone also</PUBLISHER>
+<PRICE>14.99</PRICE>
+<YEAR>2010</YEAR>
+</BOOK>
+<BOOK>
+<TITLE>Grand Hotel Budapest</TITLE>
+<AUTHOR>Wes Anderson</AUTHOR>
+<PUBLISHER>who knows</PUBLISHER>
+<PRICE>25</PRICE>
+<YEAR>2015</YEAR>
+</BOOK>
+</BOOKS>
