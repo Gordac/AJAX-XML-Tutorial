@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="shortcut icon" href="#">
+<link rel="stylesheet" type="text/css" href="design.css">
+<title>BOOKS</title>
+<meta charset="utf-8">
+<script>
+function loadXML(){
+	var xHttp = new XMLHttpRequest();
+        xHttp.overrideMimeType("text/xml");
+	xHttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+                    createView(this);    
+		}
+	};
+	xHttp.open("GET", "book_collection.xml", true);
+	xHttp.send();
+}
+
+function createView(xml){
+	var xmlDoc = xml.responseXML;
+	
+	var table="<tr><th onclick='sortTable(2)'>Title</th><th onclick='sortTable(3)'>Author</th><th onclick='sortTable(3)'>Publisher</th><th onclick='sortTable(4)'>Price</th><th onclick='sortTable(5)'>Year</th><th>Manage</th></tr>";
+	
+	var book = xmlDoc.getElementsByTagName("BOOK");
+        
+	for(var index = 0; index < book.length; index++){
+		table += "<tr><td>" + book[index].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
+		"</td><td>" +
+		book[index].getElementsByTagName("AUTHOR")[0].childNodes[0].nodeValue +
+		"</td><td>" +
+                book[index].getElementsByTagName("PUBLISHER")[0].childNodes[0].nodeValue +
+		"</td><td>" + 
+                book[index].getElementsByTagName("PRICE")[0].childNodes[0].nodeValue + " SEK" +
+		"</td><td>" +
+                book[index].getElementsByTagName("YEAR")[0].childNodes[0].nodeValue +
+		"</td><td> <button onclick='editView(" + book[index].getAttribute("id") + ")'>Edit</button> <button onclick='Delete(" + book[index].getAttribute("id")  + ")'>Delete</button> </td></tr>";
+	}
+	document.getElementById("bookView").innerHTML = table;
+        
+        
+        
+}
+
+        //Skapar popup vy för edit
+        function editView(id){
+	document.getElementById("dialog").innerHTML="";
+	let editBody = $("#dialog");
+	
+	var form = document.createElement("FORM");
+	form.setAttribute("id","editForm");
+	document.body.appendChild(form);
+	
+	var inputTitle = document.createElement("INPUT");//skapar alla element för form som visas vid anrop
+	inputTitle.setAttribute("type","text");
+	inputTitle.setAttribute("name","title");
+	inputTitle.setAttribute("id","title");
+    
+	var inputAuthor = document.createElement("INPUT");
+	inputAuthor.setAttribute("type","text");
+	inputAuthor.setAttribute("name","author");
+	inputAuthor.setAttribute("id","author");
+	
+	var inputPublisher = document.createElement("INPUT");
+	inputPublisher.setAttribute("type","text");
+	inputPublisher.setAttribute("name","publisher");
+	inputPublisher.setAttribute("id","publisher");
+    
+	var inputPrice = document.createElement("INPUT");
+	inputPrice.setAttribute("type","number");
+	inputPrice.setAttribute("name","price");
+	inputPrice.setAttribute("id","price");
+    
+	var inputYear = document.createElement("INPUT");
+	inputYear.setAttribute("type","text");
+	inputYear.setAttribute("name","year");
+	inputYear.setAttribute("id","year");
+	
+	var titleTxt = document.createElement("P");
+    var tText = document.createTextNode("Title");
+    titleTxt.appendChild(tText);
+	
+	var authorTxt = document.createElement("P");
+    var authTxt = document.createTextNode("Author");
+    authorTxt.appendChild(authTxt);
+	
+    var publisherTxt = document.createElement("P");
+    var pubText = document.createTextNode("Publisher");
+    publisherTxt.appendChild(pubText);
+	
+    var priceTxt = document.createElement("P");
+    var prText = document.createTextNode("Price");
+    priceTxt.appendChild(prText);
+	
+    var yearTxt = document.createElement("P");
+    var yTxt = document.createTextNode("Year");
+    yearTxt.appendChild(yTxt);
+	
+	var editBtn = document.createElement("INPUT");
+	editBtn.setAttribute("type","button");
+	editBtn.setAttribute("value","OK");
+	editBtn.setAttribute("onclick","editBook("+id+")");
+	
+	document.getElementById("editForm").appendChild(titleTxt);
+	document.getElementById("editForm").appendChild(inputTitle);	
+	
+	document.getElementById("editForm").appendChild(authorTxt);
+	document.getElementById("editForm").appendChild(inputAuthor);
+        
+        document.getElementById("editForm").appendChild(publisherTxt);
+	document.getElementById("editForm").appendChild(inputPublisher);
+        
+        document.getElementById("editForm").appendChild(priceTxt);
+	document.getElementById("editForm").appendChild(inputPrice);
+        
+        document.getElementById("editForm").appendChild(yearTxt);
+	document.getElementById("editForm").appendChild(inputYear);
+	
+	document.getElementById("editForm").appendChild(editBtn);
+	
+	document.getElementById("dialog").append(form);
+	
+	
+	
+    $( "#dialog" ).dialog();
+	
+}
+
+function sortTable(n) {	//Ifrån https://www.w3schools.com/howto/howto_js_sort_table.asp Där funktionen blir en händelse hanterare för tabell headers i tabellen med id bookView för att sortera efter ascending order
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("bookView");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.getElementsByTagName("TR");
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;      
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+</head>
+<body onload="loadXML()">
+<div id="dialog" title="Edit Book">
+</div>
+<div class="main">
+    <h2>Local Library</h2>
+    
+    <table id="bookView"></table>
+</div>
+</body>
+</html>
